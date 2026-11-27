@@ -126,7 +126,7 @@ await tapNav('Contas'); await wait(500);
 mark(C.expenses);
 await page.getByLabel('Valor em dong').click();
 await page.getByLabel('Valor em dong').pressSequentially('85000', { delay: 140 }); await wait(900);
-await scroll(330, 1400); await wait(900);
+if (cfg.showBalances !== false) { await scroll(330, 1400); await wait(900); } else { await wait(1600); }
 
 await tapNav('Vietnã 101'); await wait(500);
 mark(C.guide); await wait(900); await scroll(560, 2000); await wait(900);
