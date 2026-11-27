@@ -1,0 +1,129 @@
+{
+  "gru-doh@couple": {
+    "bookingRef": "DFX7Q2",
+    "notes": "Reserva fictícia (voo + hotel em Doha)"
+  },
+  "doh-han@couple": {
+    "bookingRef": "DFX7Q2"
+  },
+  "doh-han@sam": {
+    "bookingRef": "DFK3M8"
+  },
+  "sgn-doh@couple": {
+    "bookingRef": "DFX7Q2"
+  },
+  "doh-gru@couple": {
+    "bookingRef": "DFX7Q2"
+  },
+  "hph-dad": {
+    "bookingRef": "LA9T4K",
+    "notes": "PIN 0000 (fictício) · Assentos 12A, 12B, 12C"
+  },
+  "hui-sgn": {
+    "bookingRef": "LA2W8P",
+    "notes": "PIN 0000 (fictício) · Assentos 7D, 7E, 7F"
+  },
+  "h-doha@couple": {
+    "bookingRef": "PGH-48213",
+    "notes": "Pacote stopover (fictício)"
+  },
+  "h-hanoi@couple": {
+    "bookingRef": "4000.123.456",
+    "notes": "PIN 1234 (fictício)"
+  },
+  "h-ninh-binh@couple": {
+    "bookingRef": "4000.234.567",
+    "notes": "PIN 2345 (fictício)"
+  },
+  "h-ha-long@couple": {
+    "bookingRef": "4000.345.678",
+    "notes": "PIN 3456 (fictício)"
+  },
+  "h-hoi-an@couple": {
+    "bookingRef": "4000.456.789",
+    "notes": "PIN 4567 (fictício)"
+  },
+  "h-hue@couple": {
+    "bookingRef": "4000.567.890",
+    "notes": "PIN 5678 (fictício)"
+  },
+  "h-saigon@couple": {
+    "bookingRef": "4000.678.901",
+    "notes": "PIN 6789 (fictício)"
+  },
+  "h-hanoi@sam": {
+    "bookingRef": "4100.111.222",
+    "notes": "PIN 1111 (fictício)"
+  },
+  "b-transfer-han-nb": {
+    "bookingRef": "TR-2481",
+    "contact": "Motorista do hotel (fictício)"
+  },
+  "b-visa@couple": {
+    "bookingRef": "EV-DEMO-0001"
+  },
+  "__app": {
+    "expensesKey": "47bf2621b1b59fe044ed4184091edeea88f35a82d219182e30b9a2c028791c81"
+  },
+  "__docs@couple": {
+    "docsKey": "193584ecb565966938927d4e58589cc6363edd2fe7135d0186cb555db346df52",
+    "seed": [
+      {
+        "id": "870655aa-734a-4351-a01c-75b9d701d73d",
+        "owner": "ana",
+        "title": "E-visa",
+        "mime": "application/pdf",
+        "size": 2250,
+        "iv": "3iyobcqSzHruAeC0"
+      },
+      {
+        "id": "582841c1-9be6-45df-8832-15bcc06b4fe8",
+        "owner": "ana",
+        "title": "Vacina febre amarela (CIVP)",
+        "mime": "application/pdf",
+        "size": 2215,
+        "iv": "kFPV/plwq+lZGWVM"
+      },
+      {
+        "id": "be7826f6-6c9b-446d-91a3-412b307769f9",
+        "owner": "ana",
+        "title": "Seguro viagem",
+        "mime": "application/pdf",
+        "size": 2284,
+        "iv": "bW3H44R7WNRLkksf"
+      },
+      {
+        "id": "0f3a429d-50d3-41ca-a55c-bbda8dc9a998",
+        "owner": "ana",
+        "shared": true,
+        "title": "Voo Lotus Air Hai Phong → Da Nang (27/11)",
+        "mime": "application/pdf",
+        "size": 2442,
+        "iv": "so6pRdymJXwvnnJ3"
+      },
+      {
+        "id": "e034d232-f013-4e27-a45d-a24d732ee0ad",
+        "owner": "ana",
+        "shared": true,
+        "title": "Voo Lotus Air Hue → Ho Chi Minh (01/12)",
+        "mime": "application/pdf",
+        "size": 2447,
+        "iv": "dX17IP79QNmboaW6"
+      }
+    ]
+  },
+  "__docs@sam": {
+    "docsKey": "26b9294a586c00df18db1d056fddcbed1de9bbc864124a35e23df560bf51abd7",
+    "seed": [
+      {
+        "id": "c3521458-d731-49cc-a745-959a59f364b0",
+        "owner": "sam",
+        "shared": true,
+        "title": "Voo Lotus Air Hai Phong → Da Nang (27/11)",
+        "mime": "application/pdf",
+        "size": 2442,
+        "iv": "sN5Se1X62utvsrim"
+      }
+    ]
+  }
+}

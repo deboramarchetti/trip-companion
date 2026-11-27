@@ -1,0 +1,19 @@
+{
+  "dist": "dist",
+  "out": "scripts/demo/out",
+  "party": "couple",
+  "passphrase": "lanterna arroz bicicleta 27",
+  "dayDate": "2027-11-28",
+  "blurWords": [],
+  "captions": {
+    "intro": "Um app de viagem para 3 pessoas, feito com vibe coding",
+    "overview": "Roteiro, reservas, documentos e gastos num só lugar",
+    "day": "Dia a dia: o que ver, como chegar e plano B se chover",
+    "food": "Sugestões de onde comer perto do roteiro",
+    "reservations": "Voos, hotéis e transfers, com localizadores protegidos",
+    "documents": "Documentos criptografados, que abrem sem internet",
+    "expenses": "Gastos divididos entre os três e conversor de moeda",
+    "guide": "Vietnã 101: um mini guia do país",
+    "outro": "E uma surpresa na chegada a cada país"
+  }
+}

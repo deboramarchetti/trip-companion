@@ -1,0 +1,16 @@
+node_modules
+dist
+dev-dist
+*.local
+# Plain-text private trip data (booking codes, contacts). Only the encrypted
+# file src/data/private.enc.json is committed.
+private/
+dist-preview
+
+# Local environment (Supabase URL / anon key)
+.env
+.env.*
+!.env.example
+# Generated demo video frames
+scripts/demo/out/
+demo-video.mp4

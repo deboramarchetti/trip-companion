@@ -1,0 +1,104 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/fraunces/wght.css';
+@import '@fontsource-variable/fraunces/wght-italic.css';
+@import '@fontsource/be-vietnam-pro/400.css';
+@import '@fontsource/be-vietnam-pro/500.css';
+@import '@fontsource/be-vietnam-pro/600.css';
+
+@theme {
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Silk paper, ink, lacquer red, jade, turmeric gold */
+  --color-paper: #f5efe4;
+  --color-paper-2: #ece4d5;
+  --color-card: #fffcf7;
+  --color-ink: #1f1b16;
+  --color-ink-2: #574e43;
+  --color-ink-3: #8a8072;
+  --color-line: #e2d8c7;
+  --color-lacquer: #9e2f26;
+  --color-lacquer-soft: #f3dfd9;
+  --color-jade: #2e5e4e;
+  --color-jade-soft: #dbe7e0;
+  --color-gold: #b9852f;
+  --color-gold-soft: #f4e6c8;
+
+  --radius-card: 1.25rem;
+  --shadow-card: 0 1px 2px rgb(31 27 22 / 0.04), 0 8px 24px -12px rgb(31 27 22 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(31 27 22 / 0.06), 0 18px 40px -16px rgb(31 27 22 / 0.35);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    background: var(--color-paper);
+  }
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    font-size: 15px;
+    line-height: 1.5;
+    overscroll-behavior-y: none;
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+  }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--color-lacquer); outline-offset: 2px; border-radius: 6px; }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+@utility pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+@utility pt-safe { padding-top: env(safe-area-inset-top); }
+@utility card {
+  background: var(--color-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+@utility eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+@utility tap {
+  transition: transform 160ms ease, opacity 160ms ease, background-color 160ms ease;
+  &:active { transform: scale(0.97); }
+}
+
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.rise { animation: rise 420ms cubic-bezier(.2,.7,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { .rise { animation: none; } * { scroll-behavior: auto !important; } }
+
+/* Camel welcome (arrival day in Doha) — 8-bit style */
+.camel-pixel, .camel-title { font-family: 'Press Start 2P', monospace; }
+.camel-title { animation: camel-pop 0.7s steps(6) both, camel-flash 0.8s steps(2) 0.7s infinite; text-shadow: 3px 3px 0 #000; }
+.camel-blink { animation: camel-flash 1s steps(2) infinite; }
+.camel-star { position: absolute; width: 6px; height: 6px; background: #ffd166; animation: camel-flash 0.8s steps(2) infinite; }
+.camel-dunes { position: absolute; inset-inline: 0; bottom: 0; height: 22%; background: #e0b46a; box-shadow: 0 -8px 0 #f0cd8a; }
+.camel-walk { position: absolute; bottom: 20%; left: 0; animation: camel-walk 8s steps(64) infinite; }
+.camel-dance { position: relative; width: 132px; height: 96px; animation: camel-hop 0.5s steps(2) infinite; }
+.camel-frame { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
+.camel-a { animation: camel-frame-a 0.5s steps(1) infinite; }
+.camel-b { animation: camel-frame-b 0.5s steps(1) infinite; }
+@keyframes camel-walk { from { transform: translateX(-8px) scaleX(1); } 49.9% { transform: translateX(calc(100vw - 132px)) scaleX(1); } 50% { transform: translateX(calc(100vw - 132px)) scaleX(-1); } to { transform: translateX(-8px) scaleX(-1); } }
+@keyframes camel-hop { from { transform: translateY(0) rotate(-6deg); } to { transform: translateY(-12px) rotate(6deg); } }
+@keyframes camel-frame-a { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes camel-frame-b { 0%, 49% { opacity: 0; } 50%, 100% { opacity: 1; } }
+@keyframes camel-pop { from { transform: scale(0.2); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes camel-flash { 0% { opacity: 1; } 100% { opacity: 0.35; } }
+
+/* Vietnam welcome (arrival day) — reuses the 8-bit camel styles */
+.vn-road { position: absolute; inset-inline: 0; bottom: 0; height: 26%; background: #4a4a4a; box-shadow: 0 -6px 0 #2f2f2f; background-image: linear-gradient(90deg, #f5f5f5 0 40%, transparent 40% 100%); background-size: 56px 6px; background-repeat: repeat-x; background-position: 0 38%; }
+.vn-ride { bottom: calc(26% - 8px); }
+.vn-scooter { width: 168px; height: 120px; }
+.vn-star { animation: camel-flash 0.9s steps(2) infinite; }
+.vn-ride { animation-name: vn-walk; }
+@keyframes vn-walk { from { transform: translateX(-8px) scaleX(1); } 49.9% { transform: translateX(calc(100vw - 168px)) scaleX(1); } 50% { transform: translateX(calc(100vw - 168px)) scaleX(-1); } to { transform: translateX(-8px) scaleX(-1); } }
