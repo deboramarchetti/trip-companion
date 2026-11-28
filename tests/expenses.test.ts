@@ -72,3 +72,21 @@ describe('bad data never breaks the balances', () => {
     expect(balances(bad as unknown as Row[]).total).toBe(0);
   });
 });
+
+describe('amount typing format', () => {
+  it('adds thousand dots while typing and always reads back the same value', async () => {
+    const { formatTyping, formatAmount, parseAmount } = await import('../src/expenses/logic');
+    expect(formatTyping('58888', 'VND')).toBe('58.888');
+    expect(formatTyping('1.250.0000', 'VND')).toBe('12.500.000');
+    expect(formatTyping('0050', 'VND')).toBe('50');
+    expect(formatTyping('', 'VND')).toBe('');
+    expect(formatTyping('1234,5', 'BRL')).toBe('1.234,5');
+    expect(formatTyping('1234,567', 'BRL')).toBe('1.234,56');
+    expect(formatTyping('12,', 'USD')).toBe('12,');
+    expect(formatTyping(',5', 'BRL')).toBe('0,5');
+    expect(formatAmount(520.22, 'BRL')).toBe('520,22');
+    expect(formatAmount(2080000, 'VND')).toBe('2.080.000');
+    for (const [t, c, v] of [['58.888', 'VND', 58888], ['1.234,5', 'BRL', 1234.5], ['1.234', 'BRL', 1234], ['12,', 'USD', 12], ['0,5', 'BRL', 0.5], ['520,22', 'BRL', 520.22]] as const)
+      expect(parseAmount(t, c), t).toBe(v);
+  });
+});

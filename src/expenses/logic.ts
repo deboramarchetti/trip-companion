@@ -167,3 +167,22 @@ export function parseDong(s: string): number {
   const v = Number(num.replace(',', '.'));
   return Math.round(v * (unit === 'k' ? 1_000 : 1_000_000));
 }
+
+const group = (digits: string) => digits.replace(/^0+(?=\d)/, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+/**
+ * Formats an amount while it is typed, so zeros are easy to count:
+ * dong "58888" → "58.888"; real/dollar "1234,5" → "1.234,5" (comma = cents, up to 2 digits).
+ * The result always reads back with parseAmount().
+ */
+export function formatTyping(s: string, c: Currency): string {
+  if (c === 'VND') return group(s.replace(/\D/g, ''));
+  const t = s.replace(/[^\d,]/g, '');
+  const i = t.indexOf(',');
+  if (i < 0) return group(t);
+  return `${group(t.slice(0, i)) || '0'},${t.slice(i + 1).replace(/,/g, '').slice(0, 2)}`;
+}
+
+/** An existing amount shown in the same format (520.22 BRL → "520,22"; 58888 ₫ → "58.888"). */
+export const formatAmount = (v: number, c: Currency) =>
+  c === 'VND' ? group(String(Math.round(v))) : new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2, useGrouping: true }).format(v);

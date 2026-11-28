@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ArrowRight, Bed, Bus, Check, CloudOff, KeyRound, MoreHorizontal, Plus, RefreshCw, Settings2, ShoppingBag, Smartphone, Ticket, Trash2, Utensils, X } from 'lucide-react';
 import {
-  CATEGORIES, PEOPLE, balances, equalShares, fmtMoney, fmtVnd, parseAmount, personName, settleUp, toVnd,
+  CATEGORIES, PEOPLE, balances, equalShares, fmtMoney, fmtVnd, formatAmount, formatTyping, parseAmount, personName, settleUp, toVnd,
   type Category, type Currency, type ExpenseData, type PersonId, type Row, type SettlementData, SETTINGS_ID,
 } from '../expenses/logic';
 import { isExpensesKey, load, put, rejected, settingsOf, sync } from '../expenses/sync';
@@ -258,13 +258,13 @@ function ExpenseForm({ row, rates, onClose, onSave }: { row?: Extract<Row, { kin
   const d = row?.data;
   const [desc, setDesc] = useState(d?.description ?? '');
   const [currency, setCurrency] = useState<Currency>(d?.currency ?? 'VND');
-  const [amountText, setAmountText] = useState(d ? String(d.amount) : '');
+  const [amountText, setAmountText] = useState(d ? formatAmount(d.amount, d.currency) : '');
   const [paidBy, setPaidBy] = useState<PersonId>(d?.paidBy ?? readMe());
   const [who, setWho] = useState<PersonId[]>(d ? (Object.keys(d.shares) as PersonId[]) : PEOPLE.map((p) => p.id));
   const [mode, setMode] = useState<'equal' | 'exact'>(d?.splitMode ?? 'equal');
   const [exact, setExact] = useState<Partial<Record<PersonId, string>>>(() => {
     if (!d || d.splitMode !== 'exact') return {};
-    return Object.fromEntries(Object.entries(d.shares).map(([p, v]) => [p, String(Math.round((v as number) / d.rateToVnd * 100) / 100)]));
+    return Object.fromEntries(Object.entries(d.shares).map(([p, v]) => [p, formatAmount(Math.round((v as number) / d.rateToVnd * 100) / 100, d.currency)]));
   });
   const [category, setCategory] = useState<Category>(d?.category ?? 'Comida');
   const [date, setDate] = useState(d?.date ?? todayHere());
@@ -300,8 +300,12 @@ function ExpenseForm({ row, rates, onClose, onSave }: { row?: Extract<Row, { kin
       <div className="space-y-3">
         <label className={label}>Descrição<input className={input} value={desc} maxLength={120} onChange={(e) => setDesc(e.target.value)} placeholder="Ex.: Jantar no Madam Thu" autoFocus={!row} /></label>
         <div className="grid grid-cols-[1fr_130px] gap-3">
-          <label className={label}>Valor<input className={input} inputMode="decimal" value={amountText} onChange={(e) => setAmountText(e.target.value)} placeholder={currency === 'VND' ? '450.000' : '120,00'} /></label>
-          <label className={label}>Moeda<CurrencyPick value={currency} onChange={setCurrency} /></label>
+          <label className={label}>Valor<input className={input} inputMode={currency === 'VND' ? 'numeric' : 'decimal'} value={amountText} onChange={(e) => setAmountText(formatTyping(e.target.value, currency))} placeholder={currency === 'VND' ? '450.000' : '120,00'} /></label>
+          <label className={label}>Moeda<CurrencyPick value={currency} onChange={(c) => {
+            // Keep the same amount when switching currency (the comma means cents only in R$/US$).
+            const re = (t: string) => { const v = parseAmount(t, currency); return Number.isFinite(v) ? formatAmount(v, c) : formatTyping(t, c); };
+            setAmountText(re); setExact((x) => Object.fromEntries(Object.entries(x).map(([p, t]) => [p, t ? re(t) : t]))); setCurrency(c);
+          }} /></label>
         </div>
         {currency !== 'VND' && totalVnd > 0 && <div className="text-[12px] text-ink-3">= {fmtVnd(totalVnd)} (1 {currency} = {fmtVnd(rate)})</div>}
         <div><div className={label}>Quem pagou</div><div className="mt-1"><PersonChips value={[paidBy]} onChange={(v) => setPaidBy(v[0])} /></div></div>
@@ -318,7 +322,7 @@ function ExpenseForm({ row, rates, onClose, onSave }: { row?: Extract<Row, { kin
             <div className="mt-2 space-y-2">
               {who.map((p) => (
                 <label key={p} className="flex items-center gap-3 text-[14px]"><span className="w-16">{personName(p)}</span>
-                  <input className={input} inputMode="decimal" value={exact[p] ?? ''} onChange={(e) => setExact({ ...exact, [p]: e.target.value })} /></label>
+                  <input className={input} inputMode={currency === 'VND' ? 'numeric' : 'decimal'} value={exact[p] ?? ''} onChange={(e) => setExact({ ...exact, [p]: formatTyping(e.target.value, currency) })} /></label>
               ))}
               <div className="text-[12px] text-ink-3">Soma: {fmtMoney(exactSum, currency)} de {Number.isFinite(amount) ? fmtMoney(amount, currency) : '—'}</div>
             </div>
@@ -344,7 +348,7 @@ function SettleForm({ initial, row, onClose, onSave }: { initial?: { from: Perso
   const d = row?.data;
   const [from, setFrom] = useState<PersonId>(d?.from ?? initial?.from ?? PEOPLE[PEOPLE.length - 1]?.id);
   const [to, setTo] = useState<PersonId>(d?.to ?? initial?.to ?? PEOPLE[0]?.id);
-  const [amountText, setAmountText] = useState(d ? String(d.amount) : initial ? String(initial.amount) : '');
+  const [amountText, setAmountText] = useState(d ? formatAmount(d.amount, 'VND') : initial ? formatAmount(initial.amount, 'VND') : '');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [error, setError] = useState<string>();
   const submit = () => {
@@ -359,7 +363,7 @@ function SettleForm({ initial, row, onClose, onSave }: { initial?: { from: Perso
       <div className="space-y-3">
         <div><div className={label}>Quem pagou</div><div className="mt-1"><PersonChips value={[from]} onChange={(v) => setFrom(v[0])} /></div></div>
         <div><div className={label}>Para quem</div><div className="mt-1"><PersonChips value={[to]} onChange={(v) => setTo(v[0])} /></div></div>
-        <label className={label}>Valor (₫)<input className={input} inputMode="numeric" value={amountText} onChange={(e) => setAmountText(e.target.value)} /></label>
+        <label className={label}>Valor (₫)<input className={input} inputMode="numeric" value={amountText} onChange={(e) => setAmountText(formatTyping(e.target.value, 'VND'))} /></label>
         <p className="text-[12px] text-ink-3">Use quando alguém transferir ou entregar dinheiro para acertar a conta (Pix, dinheiro…).</p>
       </div>
       {error && <p className="mt-3 text-[13px] text-lacquer">{error}</p>}
