@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { RefreshCw, WifiOff } from 'lucide-react';
 import { IS_SAMPLE } from '../data';
 import { useOffline } from '../state/offline';
 
 export function Banners() {
   const { online, updateReady, applyUpdate } = useOffline();
+  const [updating, setUpdating] = useState(false);
   return (
     <>
     {IS_SAMPLE && (
@@ -23,8 +25,13 @@ export function Banners() {
             <div className="font-semibold">Roteiro atualizado</div>
             <div className="text-paper/70">A nova versão já foi baixada.</div>
           </div>
-          <button onClick={applyUpdate} className="tap flex items-center gap-1.5 rounded-full bg-paper px-3 py-1.5 text-[13px] font-semibold text-ink">
-            <RefreshCw size={13} aria-hidden /> Atualizar
+          <button
+            type="button"
+            onClick={() => { setUpdating(true); applyUpdate(); }}
+            disabled={updating}
+            className="tap relative flex min-h-11 items-center gap-1.5 rounded-full bg-paper px-4 py-2 text-[13px] font-semibold text-ink disabled:opacity-80"
+          >
+            <RefreshCw size={13} className={updating ? 'animate-spin' : ''} aria-hidden /> {updating ? 'Atualizando…' : 'Atualizar'}
           </button>
         </div>
       )}

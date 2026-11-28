@@ -38,6 +38,25 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
     return () => { removeEventListener('online', on); removeEventListener('offline', off); };
   }, []);
 
+  /**
+   * "Atualizar": activate the downloaded version and reload. Done by hand because the
+   * plugin only reloads for updates it found itself, and ours are found by reg.update()
+   * when the app returns to the foreground (Workbox calls those "external": no reload).
+   */
+  const applyUpdate = useCallback(async () => {
+    const reload = () => location.reload();
+    try {
+      const reg = await navigator.serviceWorker?.getRegistration();
+      const waiting = reg?.waiting;
+      if (!waiting) { reload(); return; }
+      navigator.serviceWorker.addEventListener('controllerchange', reload, { once: true });
+      waiting.postMessage({ type: 'SKIP_WAITING' });
+      setTimeout(reload, 4000); // safety net if the system is slow to switch
+    } catch {
+      updateServiceWorker(true).finally(() => setTimeout(reload, 1500));
+    }
+  }, [updateServiceWorker]);
+
   const save = useCallback(async () => {
     setStatus({ state: 'downloading', progress: 0 });
     const result = await saveTripOffline((p) => setStatus({ state: 'downloading', progress: p }));
@@ -45,7 +64,7 @@ export function OfflineProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <OfflineCtx.Provider value={{ status, save, online, updateReady, applyUpdate: () => updateServiceWorker(true) }}>
+    <OfflineCtx.Provider value={{ status, save, online, updateReady, applyUpdate }}>
       {children}
     </OfflineCtx.Provider>
   );
