@@ -24,6 +24,8 @@ const readMe = (): PersonId => {
   } catch { return fallback; }
 };
 const todayHere = () => tripToday(model);
+/** "≈ R$ 51,77 · US$ 9,36" with the group's rates (the same as the converter). */
+const inBrlUsd = (vnd: number, rates: { BRL: number; USD: number }) => `≈ ${fmtMoney(vnd / rates.BRL, 'BRL')} · ${fmtMoney(vnd / rates.USD, 'USD')}`;
 /** iPhone/iPad Safari keeps a separate storage for the home-screen app. */
 const isIosBrowserTab = () => /iP(hone|ad|od)/.test(navigator.userAgent) && !(navigator as unknown as { standalone?: boolean }).standalone && !matchMedia('(display-mode: standalone)').matches;
 const uuid = () => crypto.randomUUID();
@@ -102,13 +104,18 @@ export function Expenses() {
         {PEOPLE.map((p) => {
           const v = b.net[p.id];
           return (
-            <div key={p.id} className="flex items-center justify-between px-4 py-3">
-              <div>
+            <div key={p.id} className="flex items-center justify-between gap-3 px-4 py-3">
+              <div className="min-w-0">
                 <div className="font-medium">{p.name}</div>
                 <div className="text-[12px] text-ink-3">pagou {fmtVnd(b.paid[p.id])} · consumiu {fmtVnd(b.consumed[p.id])}</div>
               </div>
-              <div className={`text-right text-[15px] font-semibold tabular-nums ${v > 500 ? 'text-jade' : v < -500 ? 'text-lacquer' : 'text-ink-3'}`}>
-                {Math.abs(v) <= 500 ? 'quite' : `${v > 0 ? 'recebe' : 'deve'} ${fmtVnd(Math.abs(v))}`}
+              <div className={`shrink-0 text-right text-[15px] font-semibold tabular-nums ${v > 500 ? 'text-jade' : v < -500 ? 'text-lacquer' : 'text-ink-3'}`}>
+                {Math.abs(v) <= 500 ? 'quite' : <><span className="text-[12px] font-medium">{v > 0 ? 'recebe' : 'deve'}</span> <span className="whitespace-nowrap">{fmtVnd(Math.abs(v))}</span></>}
+                {Math.abs(v) > 500 && (
+                  <span className="block whitespace-nowrap text-[11.5px] font-normal leading-snug text-ink-3">
+                    ≈ {fmtMoney(Math.abs(v) / settingsOf(store).rates.BRL, 'BRL')}<br />{fmtMoney(Math.abs(v) / settingsOf(store).rates.USD, 'USD')}
+                  </span>
+                )}
               </div>
             </div>
           );
@@ -128,6 +135,7 @@ export function Expenses() {
                 <span className="min-w-0 flex-1 text-[14px]">
                   <b>{personName(t.from)}</b> <ArrowRight size={13} className="inline text-ink-3" /> <b>{personName(t.to)}</b>
                   <span className="block text-[13px] tabular-nums text-ink-2">{fmtVnd(t.amount)}</span>
+                  <span className="block text-[12px] tabular-nums text-ink-3">{inBrlUsd(t.amount, settingsOf(store).rates)}</span>
                 </span>
                 <button onClick={() => setEditing({ settle: t })} className="tap shrink-0 rounded-full bg-paper-2 px-3 py-1.5 text-[12.5px] font-semibold">Registrar pagamento</button>
               </li>
